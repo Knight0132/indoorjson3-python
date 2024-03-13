@@ -1,14 +1,68 @@
 {
-  "name": "$name$",
-  "version": "$version$",
-  "description": "$END$",
-  "main": "$main$",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "properties": {
+    "name": "indoorjson3-cpp",
+    "labels": ["indoorgml", "GIS"],
+    "language": ["English", "中文", "한국어"],
+    "author": {
+      "name": "Kunlin Yu",
+      "email": "yukunlin@syriusrobotics.com"
+    }
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Knight0132/indoorjson3-python.git"
-  },
-  "private": true
+  "cells": [
+    {
+      "$id": "c1",
+      "properties": {"roomNumber": "1101"},
+      "space": "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+      "node": "POINT (0.5 0.5)"
+    },
+    {
+      "$id": "c2",
+      "properties": {"roomNumber": "1102"},
+      "space": "POLYGON ((1 0, 2 0, 2 1, 1 1, 1 0))",
+      "node": "POINT (1.5 0.5)"
+    },
+    {
+      "$id": "c3",
+      "properties": {"roomNumber": "1103"},
+      "space": "POLYGON ((0 1, 1 1, 1 2, 0 2, 0 1))",
+      "node": "POINT (0.5 1.5)"
+    }
+  ],
+  "connections": [
+    {
+      "$id": "conn1-2",
+      "properties": {
+        "type": "door",
+        "开放时间": "全天",
+        "오픈 시간": "하루 종일"
+      },
+      "fr": "c1",
+      "to": "c2",
+      "bound": "LINESTRING (1 0, 1 1)",
+      "edge": "LINESTRING (0.5 0.5, 1.5 0.5)"
+    },
+    {
+      "$id": "conn3-1",
+      "properties": {"type": "window"},
+      "fr": "c3",
+      "to": "c1",
+      "bound": "LINESTRING (1 0, 1 1)",
+      "edge": "LINESTRING (0.5 0.5, 1.5 0.5)"
+    }
+  ],
+  "layers": [
+    {
+      "$id": "layer",
+      "cells": ["c1", "c2"]
+    }
+  ],
+  "rlineses": [
+    {
+      "$id": "rlines1",
+      "cell": "c1",
+      "ins": ["conn3-1"],
+      "outs": ["conn1-2"],
+      "closure": []
+    }
+  ]
 }
