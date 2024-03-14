@@ -63,7 +63,7 @@
     "rlineses": [
         {
             "$id": "rlines1",
-            "cells": "c1",
+            "cell": "c1",
             "ins": [
                 "conn3-1"
             ],

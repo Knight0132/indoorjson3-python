@@ -13,13 +13,11 @@ import os
 
 sys.path.append(os.path.abspath('../src'))
 
-from serialization import Graph
+from serialization import deserialization
 
-with open('example.json', 'r', encoding='utf-8') as f:
-    graph_dict = json.load(f)
-
-graph = Graph().from_json(graph_dict)
-hypergraph = graph.get_hypergraph()
+json_file = 'example.json'
+indoorspace = deserialization(json_file)
+hypergraph = indoorspace.get_hypergraph()
 
 with open('test_hypergraph.json', 'w', encoding='utf-8') as f:
     json.dump(hypergraph, f, indent=4)
