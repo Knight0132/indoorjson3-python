@@ -133,6 +133,73 @@ class Graph:
                 'edge': self.__edge.wkt
             }
 
+    class Layer:
+        def __init__(self, layer_id, cells):
+            self.__id = layer_id
+            self.__cells = cells
+
+        @property
+        def id(self):
+            return self.__id
+
+        @property
+        def cells(self):
+            return self.__cells
+
+        @classmethod
+        def from_json(cls, json_data):
+            return cls(json_data['$id'], json_data['cells'])
+
+        def to_json(self):
+            return {
+                '$id': self.__id,
+                'cells': self.__cells
+            }
+
+    class Rlines:
+        def __init__(self, rlines_id, cells, ins, outs, closure):
+            self.__id = rlines_id
+            self.__cells = cells
+            self.__ins = ins
+            self.__outs = outs
+            self.__closure = closure
+
+        @property
+        def id(self):
+            return self.__id
+
+        @property
+        def cells(self):
+            return self.__cells
+
+        @property
+        def ins(self):
+            return self.__ins
+
+        @property
+        def outs(self):
+            return self.__outs
+
+        @property
+        def closure(self):
+            return self.__closure
+
+        @classmethod
+        def from_json(cls, json_data):
+            return cls(json_data['$id'], json_data['cells'], json_data['ins'], json_data['outs'], json_data['closure'])
+
+        def to_json(self):
+            return {
+                '$id': self.__id,
+                'cells': self.__cells,
+                'ins': self.__ins,
+                'outs': self.__outs,
+                'closure': self.__closure
+            }
+
+    def set_properties(self, properties: dict):
+        self._properties.append(properties)
+
     def add_cell(self, cell: Cell):
         if cell.id not in [c.id for c in self._cells]:
             self._cells.append(cell)
@@ -157,6 +224,12 @@ class Graph:
                 raise ValueError('Source and target cell do not exist')
         else:
             raise ValueError('Connection id already exists')
+
+    def set_layers(self, layers: Layer):
+        self._layers.append(layers)
+
+    def set_rlineses(self, rlineses: Rlines):
+        self._rlineses.append(rlineses)
 
     def get_incident_matrix(self):
         cells = self.cells
@@ -185,18 +258,30 @@ class Graph:
 
         for j in range(incident_matrix_transpose.shape[1]):
             hyperEdge = {}
-            node_id_list = []
+            inner_edge_id = {"ins": [], "outs": []}
             for i in range(incident_matrix_transpose.shape[0]):
                 if incident_matrix_transpose[i, j] != 0:
-                    inner_edge_id = connections[i].id
-                    node_id_list.append(inner_edge_id)
+                    if incident_matrix_transpose[i, j] == -1:
+                        inner_edge_ins_id = connections[i].id
+                        inner_edge_id["ins"].append(inner_edge_ins_id)
+                    elif incident_matrix_transpose[i, j] == 1:
+                        inner_edge_outs_id = connections[i].id
+                        inner_edge_id["outs"].append(inner_edge_outs_id)
+                    else:
+                        raise ValueError('Incident matrix error')
             hyperEdge['id'] = cells[j].id
             hyperEdge['properties'] = cells[j].properties
             hyperEdge['space'] = cells[j].space.wkt
             hyperEdge['node'] = cells[j].node.wkt
-            hyperEdge['inner_nodelist'] = node_id_list
+            hyperEdge['inner_nodeset'] = inner_edge_id
             hypergraph['hyperEdges'].append(hyperEdge)
+
+        self.set_hypergraph(hypergraph)
+
         return hypergraph
+
+    def set_hypergraph(self, hypergraph):
+        self._hypergraph = hypergraph
 
     def get_cell_from_id(self, cell_id):
         for cell in self.cells:
@@ -217,8 +302,8 @@ class Graph:
             'connections': [
                 connection.to_json() for connection in self._connections
             ],
-            'layers': self._layers,
-            'rlineses': self._rlineses
+            'layers': [layer.to_json() for layer in self._layers],
+            'rlineses': [rlineses.to_json() for rlineses in self._rlineses]
         }
 
     @staticmethod

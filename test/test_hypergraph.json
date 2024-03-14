@@ -31,10 +31,14 @@
             },
             "space": "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
             "node": "POINT (0.5 0.5)",
-            "inner_nodelist": [
-                "conn1-2",
-                "conn3-1"
-            ]
+            "inner_nodeset": {
+                "ins": [
+                    "conn3-1"
+                ],
+                "outs": [
+                    "conn1-2"
+                ]
+            }
         },
         {
             "id": "c2",
@@ -43,9 +47,12 @@
             },
             "space": "POLYGON ((1 0, 2 0, 2 1, 1 1, 1 0))",
             "node": "POINT (1.5 0.5)",
-            "inner_nodelist": [
-                "conn1-2"
-            ]
+            "inner_nodeset": {
+                "ins": [
+                    "conn1-2"
+                ],
+                "outs": []
+            }
         },
         {
             "id": "c3",
@@ -54,9 +61,12 @@
             },
             "space": "POLYGON ((0 1, 1 1, 1 2, 0 2, 0 1))",
             "node": "POINT (0.5 1.5)",
-            "inner_nodelist": [
-                "conn3-1"
-            ]
+            "inner_nodeset": {
+                "ins": [],
+                "outs": [
+                    "conn3-1"
+                ]
+            }
         }
     ]
 }

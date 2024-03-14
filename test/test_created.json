@@ -1,0 +1,76 @@
+{
+    "properties": [],
+    "cells": [
+        {
+            "$id": "c1",
+            "properties": {
+                "roomNumber": "1101"
+            },
+            "space": "POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))",
+            "node": "POINT (0.5 0.5)"
+        },
+        {
+            "$id": "c2",
+            "properties": {
+                "roomNumber": "1102"
+            },
+            "space": "POLYGON ((1 0, 2 0, 2 1, 1 1, 1 0))",
+            "node": "POINT (1.5 0.5)"
+        },
+        {
+            "$id": "c3",
+            "properties": {
+                "roomNumber": "1103"
+            },
+            "space": "POLYGON ((0 1, 1 1, 1 2, 0 2, 0 1))",
+            "node": "POINT (0.5 1.5)"
+        }
+    ],
+    "connections": [
+        {
+            "$id": "conn1-2",
+            "properties": {
+                "type": "door",
+                "\u5f00\u653e\u65f6\u95f4": "\u5168\u5929",
+                "\uc624\ud508 \uc2dc\uac04": "\ud558\ub8e8 \uc885\uc77c"
+            },
+            "source": "c1",
+            "target": "c2",
+            "bound": "LINESTRING (1 0, 1 1)",
+            "edge": "LINESTRING (0.5 0.5, 1.5 0.5)"
+        },
+        {
+            "$id": "conn3-1",
+            "properties": {
+                "type": "window"
+            },
+            "source": "c3",
+            "target": "c1",
+            "bound": "LINESTRING (1 0, 1 1)",
+            "edge": "LINESTRING (0.5 0.5, 1.5 0.5)"
+        }
+    ],
+    "layers": [
+        {
+            "$id": "layer",
+            "cells": [
+                "c1",
+                "c2",
+                "c3"
+            ]
+        }
+    ],
+    "rlineses": [
+        {
+            "$id": "rlines1",
+            "cells": "c1",
+            "ins": [
+                "conn3-1"
+            ],
+            "outs": [
+                "conn1-2"
+            ],
+            "closure": []
+        }
+    ]
+}
