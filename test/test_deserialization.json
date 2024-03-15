@@ -1,5 +1,20 @@
 {
-    "properties": [],
+    "properties": {
+        "name": "indoorjson3-cpp",
+        "labels": [
+            "indoorgml",
+            "GIS"
+        ],
+        "language": [
+            "English",
+            "中文",
+            "한국어"
+        ],
+        "author": {
+            "name": "Kunlin Yu",
+            "email": "yukunlin@syriusrobotics.com"
+        }
+    },
     "cells": [
         {
             "$id": "c1",
@@ -31,8 +46,8 @@
             "$id": "conn1-2",
             "properties": {
                 "type": "door",
-                "\u5f00\u653e\u65f6\u95f4": "\u5168\u5929",
-                "\uc624\ud508 \uc2dc\uac04": "\ud558\ub8e8 \uc885\uc77c"
+                "开放时间": "全天",
+                "오픈 시간": "하루 종일"
             },
             "source": "c1",
             "target": "c2",
@@ -55,8 +70,7 @@
             "$id": "layer",
             "cells": [
                 "c1",
-                "c2",
-                "c3"
+                "c2"
             ]
         }
     ],

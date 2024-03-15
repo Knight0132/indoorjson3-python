@@ -7,49 +7,51 @@ Author: Ziwei Xiang <knightzz1016@gmail.com>
 Create Date: 2024/3/14
 """
 
+import json
 import numpy as np
 from cell import Cell
 from connection import Connection
 from layer import Layer
 from rlines import Rlines
+from typing import List, Dict
 
 
 class IndoorSpace:
 
     def __init__(self):
-        self._properties = []
-        self._cells = []
-        self._connections = []
-        self._layers = []
-        self._rlineses = []
-        self._hypergraph = {}
+        self._properties: Dict = {}
+        self._cells: List[Cell] = []
+        self._connections: List[Connection] = []
+        self._layers: List[Layer] = []
+        self._rlineses: List[Rlines] = []
+        self._hypergraph: Dict = {}
 
     @property
-    def properties(self):
+    def properties(self) -> Dict:
         return self._properties
 
     @property
-    def cells(self):
+    def cells(self) -> List[Cell]:
         return self._cells
 
     @property
-    def connections(self):
+    def connections(self) -> List[Connection]:
         return self._connections
 
     @property
-    def layers(self):
+    def layers(self) -> List[Layer]:
         return self._layers
 
     @property
-    def rlineses(self):
+    def rlineses(self) -> List[Rlines]:
         return self._rlineses
 
     @property
-    def hypergraph(self):
+    def hypergraph(self) -> Dict:
         return self._hypergraph
 
-    def set_properties(self, properties: dict):
-        self._properties.append(properties)
+    def set_properties(self, properties: Dict):
+        self._properties = properties
 
     def add_cell(self, cell: Cell):
         if cell.id not in [c.id for c in self._cells]:
@@ -86,9 +88,9 @@ class IndoorSpace:
         cells = self.cells
         connections = self.connections
         incident_matrix = np.zeros((len(cells), len(connections)), dtype=int)
-        for j, connections in enumerate(connections):
-            source = self.get_cell_from_id(connections.source)
-            target = self.get_cell_from_id(connections.target)
+        for j, connection in enumerate(connections):
+            source = self.get_cell_from_id(connection.source)
+            target = self.get_cell_from_id(connection.target)
             source_index = cells.index(source)
             target_index = cells.index(target)
             incident_matrix[source_index, j] = 1
@@ -149,32 +151,26 @@ class IndoorSpace:
                 return connection
         return None
 
-    def to_json(self):
-        return {
-            'properties': self._properties,
-            'cells': [cell.to_json() for cell in self._cells],
-            'connections': [
-                connection.to_json() for connection in self._connections
-            ],
-            'layers': [layer.to_json() for layer in self._layers],
-            'rlineses': [rlines.to_json() for rlines in self._rlineses]
-        }
+    def to_json(self) -> str:
+        result = {}
+        for key, value in self.__dict__.items():
+            if key == '_hypergraph':
+                continue
+            elif key == '_properties':
+                result[key.strip('_')] = value
+            else:
+                result[key.strip('_')] = [item.to_json() for item in value]
+        return json.dumps(result, indent=4, ensure_ascii=False)
 
-    @staticmethod
-    def from_json(json_data):
-        indoorSpace = IndoorSpace()
-
-        setattr(indoorSpace, '_properties', json_data['properties'])
-
-        class_map = {
-            '_cells': Cell,
-            '_connections': Connection,
-            '_layers': Layer,
-            '_rlineses': Rlines
-        }
-
-        for attr, cls in class_map.items():
-            items = json_data[attr.lstrip('_')]
-            setattr(indoorSpace, attr, [cls.from_json(item) for item in items])
-
-        return indoorSpace
+    @classmethod
+    def from_json(cls, json_str: str) -> 'IndoorSpace':
+        json_data = json.loads(json_str)
+        instance = cls()
+        for key, value in json_data.items():
+            if key == 'properties':
+                setattr(instance, f"_{key}", value)
+            elif key == 'rlineses':
+                setattr(instance, f"_{key}", [eval(key.capitalize()[:-2]).from_json(item) for item in value])
+            else:
+                setattr(instance, f"_{key}", [eval(key.capitalize()[:-1]).from_json(item) for item in value])
+        return instance

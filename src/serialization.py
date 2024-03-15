@@ -14,10 +14,10 @@ from indoorspace import IndoorSpace
 def serialization(filepath: str, indoorspace: IndoorSpace):
     indoorSpace_jsondata = indoorspace.to_json()
     with open(filepath, 'w', encoding='utf-8') as file:
-        json.dump(indoorSpace_jsondata, file, indent=4)
+        file.write(indoorSpace_jsondata)
 
 
 def deserialization(filepath: str) -> IndoorSpace:
     with open(filepath, 'r', encoding='utf-8') as file:
-        indoorSpace_dict = json.load(file)
-    return IndoorSpace().from_json(indoorSpace_dict)
+        indoorSpace_str = file.read()
+    return IndoorSpace().from_json(indoorSpace_str)
