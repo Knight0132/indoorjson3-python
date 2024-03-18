@@ -12,9 +12,10 @@ from indoorspace import IndoorSpace
 
 
 def serialization(filepath: str, indoorspace: IndoorSpace):
-    indoorSpace_jsondata = indoorspace.to_json()
+    indoorSpace_jsondata = json.dumps(indoorspace.to_json(), indent=4, ensure_ascii=False)
     with open(filepath, 'w', encoding='utf-8') as file:
         file.write(indoorSpace_jsondata)
+    return indoorSpace_jsondata
 
 
 def deserialization(filepath: str) -> IndoorSpace:

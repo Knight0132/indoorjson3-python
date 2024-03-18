@@ -26,12 +26,7 @@ class TestDeserialization(unittest.TestCase):
 
         indoorSpace = deserialization('example.json')
 
-        generated_json = 'test_deserialization.json'
-
-        serialization(generated_json, indoorSpace)
-
-        with open(generated_json, 'r') as file:
-            generated_json = json.load(file)
+        generated_json = indoorSpace.to_json()
 
         self.assertEqual(original_json, generated_json)
 

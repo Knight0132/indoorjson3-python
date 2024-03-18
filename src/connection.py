@@ -41,8 +41,8 @@ class Connection:
                  bound: BaseGeometry, edge: BaseGeometry):
         self.__id: str = connections_id
         self.__properties: Dict = properties
-        self.__source: str = fr
-        self.__target: str = to
+        self.__fr: str = fr
+        self.__to: str = to
         self.__bound: BaseGeometry = bound
         self.__edge: BaseGeometry = edge
 
@@ -56,11 +56,11 @@ class Connection:
 
     @property
     def source(self) -> str:
-        return self.__source
+        return self.__fr
 
     @property
     def target(self) -> str:
-        return self.__target
+        return self.__to
 
     @property
     def bound(self) -> BaseGeometry:

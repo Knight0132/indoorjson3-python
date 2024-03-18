@@ -151,7 +151,7 @@ class IndoorSpace:
                 return connection
         return None
 
-    def to_json(self) -> str:
+    def to_json(self) -> Dict:
         result = {}
         for key, value in self.__dict__.items():
             if key == '_hypergraph':
@@ -160,7 +160,7 @@ class IndoorSpace:
                 result[key.strip('_')] = value
             else:
                 result[key.strip('_')] = [item.to_json() for item in value]
-        return json.dumps(result, indent=4, ensure_ascii=False)
+        return result
 
     @classmethod
     def from_json(cls, json_str: str) -> 'IndoorSpace':
