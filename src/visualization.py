@@ -63,6 +63,7 @@ def hypergraph_visualize(indoorSpace: IndoorSpace):
         cell = indoorSpace.get_cell_from_id(hyperEdge['id'])
         connection_dict = hyperEdge['inner_nodeset']
         rlines_group = geo.Polygon(cell.space)
+
         x1, y1 = rlines_group.exterior.xy
 
         for value in connection_dict.values():
@@ -77,6 +78,21 @@ def hypergraph_visualize(indoorSpace: IndoorSpace):
                                mode='markers',
                                name='Connection Point',
                                text=str(connection.properties),
+                               hoverinfo='text'))
+
+        if 'closure' in hyperEdge:
+            rlines_closure = hyperEdge['closure']
+            for rlines_pairs in rlines_closure:
+                ins_connection_point = indoorSpace.get_connection_from_id(rlines_pairs[0]).bound.centroid
+                outs_connection_point = indoorSpace.get_connection_from_id(rlines_pairs[1]).bound.centroid
+                rline = geo.LineString([ins_connection_point, outs_connection_point])
+                x, y = rline.xy
+                fig.add_trace(
+                    go.Scatter(x=list(x),
+                               y=list(y),
+                               mode='lines',
+                               name='Rline',
+                               text=str(rlines_pairs),
                                hoverinfo='text'))
 
         fig.add_trace(

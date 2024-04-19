@@ -103,6 +103,7 @@ class IndoorSpace:
     def get_hypergraph(self):
         cells = self.cells
         connections = self.connections
+        rlineses = self.rlineses
         hypergraph = self._hypergraph
         hypergraph['hyperNodes'] = []
         hypergraph['hyperEdges'] = []
@@ -130,6 +131,12 @@ class IndoorSpace:
             hyperEdge['space'] = cells[j].space.wkt
             hyperEdge['node'] = cells[j].node.wkt
             hyperEdge['inner_nodeset'] = inner_edge_id
+
+            for rlines in rlineses:
+                if rlines.cell == cells[j].id:
+                    hyperEdge['closure'] = rlines.closure
+                    break
+
             hypergraph['hyperEdges'].append(hyperEdge)
 
         self.set_hypergraph(hypergraph)
